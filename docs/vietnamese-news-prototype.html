@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>vReader Prototype — Vietnam News (Hover Markup)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-zinc-50 text-zinc-900">
+  <div class="sticky top-0 z-40 border-b border-zinc-200 bg-white/80 backdrop-blur">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+      <div class="flex items-center gap-3">
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-zinc-900 text-sm font-semibold text-white">
+          vR
+        </div>
+        <div class="leading-tight">
+          <div class="text-sm font-semibold">vReader Prototype</div>
+          <div class="text-xs text-zinc-500">Hover 识别高亮 · 点击打开解释面板（占位）</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="toggleHighlights"
+          class="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm font-medium text-zinc-800 shadow-sm transition hover:bg-zinc-50 active:translate-y-px">
+          <span class="h-2 w-2 rounded-full bg-emerald-500" id="toggleHighlightsDot"></span>
+          高亮：开
+        </button>
+        <button id="toggleBilingual"
+          class="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm font-medium text-zinc-800 shadow-sm transition hover:bg-zinc-50 active:translate-y-px">
+          双语：开
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <main class="mx-auto max-w-6xl px-4 py-6">
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
+      <article class="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
+        <div class="border-b border-zinc-100 px-6 py-5">
+          <div class="flex flex-wrap items-center gap-2 text-xs text-zinc-500">
+            <span class="rounded-full bg-zinc-100 px-2 py-1 text-[11px] font-medium text-zinc-700">Kinh tế</span>
+            <span>•</span>
+            <span>Hà Nội</span>
+            <span>•</span>
+            <time datetime="2026-01-01">01/01/2026 09:10</time>
+          </div>
+          <h1 class="mt-3 text-2xl font-bold leading-tight text-zinc-900 md:text-3xl">
+            Doanh nghiệp Việt tăng tốc chuyển đổi số trong bối cảnh thị trường biến động
+          </h1>
+          <p class="mt-3 max-w-3xl text-sm leading-6 text-zinc-600">
+            Bài mẫu để thử nghiệm “nhận diện đơn vị ngôn ngữ” khi đọc tin tức. Hãy di chuột qua các phần được đánh dấu
+            để xem
+            hiệu ứng nhận diện; sau đó bấm để mở panel (giả lập truy vấn mô hình).
+          </p>
+          <div class="mt-4 flex flex-wrap items-center gap-2">
+            <span
+              class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs text-zinc-700">
+              <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+              Hover = nhận diện + highlight
+            </span>
+            <span
+              class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs text-zinc-700">
+              <span class="h-1.5 w-1.5 rounded-full bg-indigo-500"></span>
+              Click = mở thẻ giải thích (placeholder)
+            </span>
+            <span
+              class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs text-zinc-700">
+              <span class="h-1.5 w-1.5 rounded-full bg-zinc-500"></span>
+              Esc = đóng panel
+            </span>
+          </div>
+        </div>
+
+        <section class="px-6 py-5">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 class="text-sm font-semibold text-zinc-900">正文（越南语 + 中文译文）</h2>
+              <div class="mt-1 text-xs text-zinc-500">译文紧接原文段落下方 · 段落级对齐</div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 text-xs text-zinc-500">
+              <span class="inline-flex items-center gap-1.5">
+                <span class="h-2 w-2 rounded bg-amber-200 ring-1 ring-amber-300"></span>
+                单词
+              </span>
+              <span class="inline-flex items-center gap-1.5">
+                <span class="h-2 w-2 rounded bg-sky-200 ring-1 ring-sky-300"></span>
+                词组/搭配
+              </span>
+              <span class="inline-flex items-center gap-1.5">
+                <span class="h-2 w-2 rounded bg-fuchsia-200 ring-1 ring-fuchsia-300"></span>
+                句式
+              </span>
+              <span class="inline-flex items-center gap-1.5">
+                <span class="h-2 w-2 rounded bg-emerald-200 ring-1 ring-emerald-300"></span>
+                俗语
+              </span>
+            </div>
+          </div>
+
+          <div class="mt-4 space-y-4" id="viArticle">
+            <div data-paragraph="p1" class="rounded-2xl border border-zinc-100 bg-zinc-50/40 p-4">
+              <p class="text-[15px] leading-7 text-zinc-800">
+                <span class="sentence sentence-vi" data-sid="p1-s1">
+                  Theo khảo sát mới công bố, nhiều doanh nghiệp đang
+                  <span class="unit unit-pattern" data-unit-id="u-pattern-1" data-unit-type="句式"
+                    data-unit-label="không chỉ... mà còn..."
+                    data-unit-note="Cấu trúc nhấn mạnh: không chỉ A mà còn B">không chỉ</span>
+                  đầu tư vào hạ tầng,
+                  <span class="unit unit-pattern" data-unit-id="u-pattern-1b" data-unit-type="句式"
+                    data-unit-label="không chỉ... mà còn..."
+                    data-unit-note="Cấu trúc nhấn mạnh: không chỉ A mà còn B">mà còn</span>
+                  ưu tiên đào tạo nhân lực.
+                </span>
+                <span class="sentence sentence-vi" data-sid="p1-s2">
+                  Trong
+                  <span class="unit unit-phrase" data-unit-id="u-phrase-1" data-unit-type="词组/搭配"
+                    data-unit-label="trong bối cảnh" data-unit-note="Cụm mang nghĩa 'trong tình hình/hoàn cảnh'">bối
+                    cảnh</span>
+                  chi phí tăng và nhu cầu thay đổi nhanh, các quyết định “đi trước” thường tạo khác biệt rõ rệt.
+                </span>
+              </p>
+              <p class="translation mt-2 border-l-2 border-zinc-200 pl-3 text-[14px] leading-6 text-zinc-600">
+                <span class="sentence sentence-zh" data-sid="p1-s1">根据最新公布的调查，许多企业不仅投资基础设施，也优先培训人才。</span>
+                <span class="sentence sentence-zh" data-sid="p1-s2">在成本上升、需求快速变化的背景下，“提前布局”的决策往往能带来明显差异。</span>
+              </p>
+            </div>
+
+            <div data-paragraph="p2" class="rounded-2xl border border-zinc-100 bg-zinc-50/40 p-4">
+              <p class="text-[15px] leading-7 text-zinc-800">
+                <span class="sentence sentence-vi" data-sid="p2-s1">
+                  <span class="unit unit-phrase" data-unit-id="u-phrase-2" data-unit-type="词组/搭配"
+                    data-unit-label="đáng chú ý"
+                    data-unit-note="Cụm dùng trong văn phong báo chí để dẫn điểm nổi bật">Đáng chú ý</span>, một số công
+                  ty chọn triển khai trợ lý AI cho bộ phận chăm sóc khách hàng để giảm thời gian phản hồi.
+                </span>
+                <span class="sentence sentence-vi" data-sid="p2-s2">
+                  Tuy nhiên, nếu chỉ “thêm công cụ” mà thiếu quy trình, hiệu quả có thể
+                  <span class="unit unit-idiom" data-unit-id="u-idiom-1" data-unit-type="俗语"
+                    data-unit-label="nước đến chân mới nhảy"
+                    data-unit-note="Ý nói chỉ đến lúc nguy cấp mới hành động">nước đến chân mới nhảy</span>.
+                </span>
+              </p>
+              <p class="translation mt-2 border-l-2 border-zinc-200 pl-3 text-[14px] leading-6 text-zinc-600">
+                <span class="sentence sentence-zh" data-sid="p2-s1">值得注意的是，一些公司选择为客服部门部署 AI 助手以缩短响应时间。</span>
+                <span class="sentence sentence-zh" data-sid="p2-s2">然而，如果只是“加工具”而缺少流程配套，效果可能会变成临到关头才行动。</span>
+              </p>
+            </div>
+
+            <div data-paragraph="p3" class="rounded-2xl border border-zinc-100 bg-zinc-50/40 p-4">
+              <p class="text-[15px] leading-7 text-zinc-800">
+                <span class="sentence sentence-vi" data-sid="p3-s1">
+                  Chuyên gia nhận định rằng việc chuẩn hóa dữ liệu giúp doanh nghiệp
+                  <span class="unit unit-phrase" data-unit-id="u-phrase-3" data-unit-type="词组/搭配"
+                    data-unit-label="ra quyết định"
+                    data-unit-note="Cụm thường đi với 'nhanh/chính xác/dựa trên dữ liệu'">ra quyết định</span>
+                  nhanh hơn và nhất quán hơn.
+                </span>
+                <span class="sentence sentence-vi" data-sid="p3-s2">
+                  Ở cấp chiến lược, yếu tố quan trọng là
+                  <span class="unit unit-word" data-unit-id="u-word-1" data-unit-type="单词" data-unit-label="minh bạch"
+                    data-unit-note="Tính minh bạch (transparency) trong dữ liệu/quy trình">minh bạch</span>
+                  trách nhiệm: ai chịu trách nhiệm về chất lượng dữ liệu, ai phê duyệt thay đổi và ai đo lường tác động.
+                </span>
+              </p>
+              <p class="translation mt-2 border-l-2 border-zinc-200 pl-3 text-[14px] leading-6 text-zinc-600">
+                <span class="sentence sentence-zh" data-sid="p3-s1">专家认为，数据标准化能帮助企业更快且更一致地做决策。</span>
+                <span class="sentence sentence-zh" data-sid="p3-s2">在战略层面，关键在于责任透明：谁对数据质量负责、谁批准变更、谁衡量影响。</span>
+              </p>
+            </div>
+
+            <div data-paragraph="p4" class="rounded-2xl border border-zinc-100 bg-zinc-50/40 p-4">
+              <p class="text-[15px] leading-7 text-zinc-800">
+                <span class="sentence sentence-vi" data-sid="p4-s1">
+                  Trong khi đó, các doanh nghiệp vừa và nhỏ thường gặp khó ở bài toán ngân sách và nhân sự.
+                </span>
+                <span class="sentence sentence-vi" data-sid="p4-s2">
+                  Nhiều đơn vị ưu tiên giải pháp “vừa đủ dùng”, sau đó mở rộng dần,
+                  <span class="unit unit-pattern" data-unit-id="u-pattern-2" data-unit-type="句式"
+                    data-unit-label="càng... càng..."
+                    data-unit-note="Cấu trúc biểu thị mức độ tăng theo mức độ">càng</span>
+                  làm
+                  <span class="unit unit-pattern" data-unit-id="u-pattern-2b" data-unit-type="句式"
+                    data-unit-label="càng... càng..."
+                    data-unit-note="Cấu trúc biểu thị mức độ tăng theo mức độ">càng</span>
+                  học được cách tối ưu.
+                </span>
+                <span class="sentence sentence-vi" data-sid="p4-s3">
+                  Cách tiếp cận này giúp hạn chế rủi ro, nhưng đòi hỏi kỷ luật triển khai đều đặn.
+                </span>
+              </p>
+              <p class="translation mt-2 border-l-2 border-zinc-200 pl-3 text-[14px] leading-6 text-zinc-600">
+                <span class="sentence sentence-zh" data-sid="p4-s1">与此同时，中小企业往往在预算和人手上更困难。</span>
+                <span class="sentence sentence-zh" data-sid="p4-s2">许多团队先选“够用”的方案再逐步扩展，越做越能学会优化。</span>
+                <span class="sentence sentence-zh" data-sid="p4-s3">这种方式降低风险，但要求持续且有纪律的推进。</span>
+              </p>
+            </div>
+
+            <div data-paragraph="p5" class="rounded-2xl border border-zinc-100 bg-zinc-50/40 p-4">
+              <p class="text-[15px] leading-7 text-zinc-800">
+                <span class="sentence sentence-vi" data-sid="p5-s1">
+                  Về dài hạn, chuyển đổi số không chỉ là câu chuyện công nghệ.
+                </span>
+                <span class="sentence sentence-vi" data-sid="p5-s2">
+                  Nó là sự thay đổi thói quen làm việc, cách phối hợp giữa các phòng ban và cách đo lường hiệu suất.
+                </span>
+                <span class="sentence sentence-vi" data-sid="p5-s3">
+                  Nếu tổ chức xây dựng được văn hóa học hỏi, họ sẽ dễ thích nghi khi thị trường “quay xe” bất ngờ.
+                </span>
+              </p>
+              <p class="translation mt-2 border-l-2 border-zinc-200 pl-3 text-[14px] leading-6 text-zinc-600">
+                <span class="sentence sentence-zh" data-sid="p5-s1">从长期看，数字化转型不仅是技术问题。</span>
+                <span class="sentence sentence-zh" data-sid="p5-s2">更是工作习惯、跨部门协作方式以及绩效衡量方式的变化。</span>
+                <span class="sentence sentence-zh" data-sid="p5-s3">如果组织建立起学习文化，就更能适应市场的突然转向。</span>
+              </p>
+            </div>
+          </div>
+        </section>
+      </article>
+
+      <aside class="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <div class="text-sm font-semibold text-zinc-900">交互建议</div>
+            <div class="mt-1 text-xs leading-5 text-zinc-600">
+              Hover 只做“识别 + 克制高亮”，避免一上来就弹出大量解释。点击后再进入解释/学习模式。
+            </div>
+          </div>
+          <div class="rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-700">
+            <div class="font-medium">密度</div>
+            <div class="mt-1 flex gap-1">
+              <button class="densityBtn rounded-lg bg-white px-2 py-1 shadow-sm ring-1 ring-zinc-200"
+                data-density="low">低</button>
+              <button class="densityBtn rounded-lg px-2 py-1 text-zinc-600 hover:bg-white/60"
+                data-density="mid">中</button>
+              <button class="densityBtn rounded-lg px-2 py-1 text-zinc-600 hover:bg-white/60"
+                data-density="high">高</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5 space-y-3 text-sm text-zinc-700">
+          <div class="rounded-xl border border-zinc-200 bg-white p-4">
+            <div class="text-xs font-semibold text-zinc-900">Hover 反馈（推荐）</div>
+            <ul class="mt-2 list-disc space-y-1 pl-5 text-xs leading-5 text-zinc-600">
+              <li>同一单位的多个 token 统一高亮（短语/句式覆盖范围清晰）</li>
+              <li>hover 时只显示轻量提示：类型 + “点击获取解释”</li>
+              <li>离开后快速恢复，避免停留残影</li>
+            </ul>
+          </div>
+
+          <div class="rounded-xl border border-zinc-200 bg-white p-4">
+            <div class="text-xs font-semibold text-zinc-900">Click 行为（占位）</div>
+            <div class="mt-2 text-xs leading-5 text-zinc-600">
+              点击后打开右侧解释面板，展示“语境 + 结构化解释字段”。真实实现时这里再调用大模型并缓存结果。
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-zinc-200 bg-white p-4">
+            <div class="text-xs font-semibold text-zinc-900">键盘与可访问性</div>
+            <div class="mt-2 text-xs leading-5 text-zinc-600">
+              Esc 关闭面板；tooltip 不抢焦点（pointer-events-none）。
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <div id="hoverTooltip"
+    class="pointer-events-none fixed left-0 top-0 z-50 hidden max-w-[360px] -translate-y-1 rounded-xl border border-zinc-200 bg-white/95 px-3 py-2 text-xs text-zinc-700 shadow-lg backdrop-blur"
+    role="tooltip" aria-hidden="true">
+    <div class="flex items-center gap-2">
+      <span id="tooltipBadge" class="inline-flex items-center rounded-lg px-2 py-0.5 text-[11px] font-semibold"></span>
+      <span class="truncate font-medium" id="tooltipLabel"></span>
+    </div>
+    <div class="mt-1 flex items-center justify-between gap-3 text-[11px] text-zinc-500">
+      <span class="truncate" id="tooltipHint">Hover 识别 · 点击打开解释</span>
+      <span class="shrink-0 rounded-md bg-zinc-100 px-1.5 py-0.5 text-[10px] text-zinc-600">Click</span>
+    </div>
+  </div>
+
+  <button id="selectionSearch"
+    class="fixed left-0 top-0 z-50 hidden flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200 bg-white shadow-lg transition hover:bg-zinc-50 active:translate-y-px"
+    aria-label="精确查询选中文本" type="button">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="text-zinc-700">
+      <path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" stroke="currentColor" stroke-width="2" />
+      <path d="M21 21l-4.2-4.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </svg>
+  </button>
+
+  <div id="explainDrawer"
+    class="fixed inset-y-0 right-0 z-50 hidden w-full max-w-[520px] border-l border-zinc-200 bg-white shadow-2xl"
+    role="dialog" aria-modal="true" aria-label="解释面板">
+    <div class="flex h-full flex-col">
+      <div class="flex items-start justify-between gap-4 border-b border-zinc-100 px-5 py-4">
+        <div>
+          <div class="text-xs font-medium text-zinc-500" id="drawerType">—</div>
+          <div class="mt-1 text-base font-semibold text-zinc-900" id="drawerTitle">—</div>
+          <div class="mt-1 text-xs leading-5 text-zinc-600" id="drawerSubtitle">点击语言单位后显示语境化解释（此处为占位）</div>
+        </div>
+        <button id="drawerClose"
+          class="inline-flex items-center rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm font-medium text-zinc-800 shadow-sm transition hover:bg-zinc-50 active:translate-y-px">
+          关闭
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-auto px-5 py-4">
+        <div class="space-y-4">
+          <div class="rounded-2xl border border-zinc-200 bg-white p-4">
+            <div class="text-xs font-semibold text-zinc-900">语境（本句 + 邻句）</div>
+            <div class="mt-2 text-sm leading-6 text-zinc-700" id="drawerContext">—</div>
+          </div>
+
+          <div class="rounded-2xl border border-zinc-200 bg-white p-4">
+            <div class="flex items-center justify-between gap-3">
+              <div class="text-xs font-semibold text-zinc-900">解释字段（建议结构）</div>
+              <span class="rounded-full bg-zinc-100 px-2 py-1 text-[11px] font-medium text-zinc-700">LLM 占位</span>
+            </div>
+            <div class="mt-3 grid grid-cols-1 gap-3 text-sm">
+              <div class="rounded-xl bg-zinc-50 p-3">
+                <div class="text-[11px] font-semibold text-zinc-700">真实含义</div>
+                <div class="mt-1 text-zinc-700">—</div>
+              </div>
+              <div class="rounded-xl bg-zinc-50 p-3">
+                <div class="text-[11px] font-semibold text-zinc-700">为什么这样用</div>
+                <div class="mt-1 text-zinc-700">—</div>
+              </div>
+              <div class="rounded-xl bg-zinc-50 p-3">
+                <div class="text-[11px] font-semibold text-zinc-700">语用色彩/场景</div>
+                <div class="mt-1 text-zinc-700">—</div>
+              </div>
+              <div class="rounded-xl bg-zinc-50 p-3">
+                <div class="text-[11px] font-semibold text-zinc-700">可替换表达</div>
+                <div class="mt-1 text-zinc-700">—</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-indigo-200 bg-indigo-50 p-4">
+            <div class="text-xs font-semibold text-indigo-900">点击后真实流程（你未来要接入的）</div>
+            <ol class="mt-2 list-decimal space-y-1 pl-5 text-xs leading-5 text-indigo-800">
+              <li>构造上下文（标题 + 本句 + 邻句 + 段落主题）</li>
+              <li>调用模型生成解释卡 JSON</li>
+              <li>缓存到本地（按 URL + unitId + contextKey）</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .sentence {
+      border-radius: 0.75rem;
+      padding: 0.08rem 0.12rem;
+      margin: 0 -0.06rem;
+      transition: background-color 120ms ease;
+    }
+
+    .sentence-active {
+      background-color: rgb(172 245 98 / 0.24);
+    }
+
+    .unit {
+      border-radius: 0.5rem;
+      padding: 0.05rem 0.18rem;
+      margin: 0 -0.04rem;
+      transition: background-color 120ms ease, box-shadow 120ms ease, color 120ms ease;
+      cursor: default;
+      background-color: transparent;
+    }
+
+    .units-off .unit {
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    .unit-active {
+      box-shadow: 0 0 0 2px rgb(24 24 27 / 0.12);
+    }
+
+    .unit-word {
+      background-color: rgb(253 230 138 / var(--hl-base-alpha, 0.26));
+      box-shadow: inset 0 0 0 1px rgb(245 158 11 / 0.55);
+    }
+
+    .unit-phrase {
+      background-color: rgb(186 230 253 / var(--hl-base-alpha, 0.26));
+      box-shadow: inset 0 0 0 1px rgb(14 165 233 / 0.50);
+    }
+
+    .unit-pattern {
+      background-color: rgb(245 208 254 / var(--hl-base-alpha, 0.26));
+      box-shadow: inset 0 0 0 1px rgb(217 70 239 / 0.48);
+    }
+
+    .unit-idiom {
+      background-color: rgb(167 243 208 / var(--hl-base-alpha, 0.26));
+      box-shadow: inset 0 0 0 1px rgb(16 185 129 / 0.46);
+    }
+
+    .sentence-active .unit-word {
+      background-color: rgb(253 230 138 / var(--hl-active-alpha, 0.58));
+      box-shadow: inset 0 0 0 1px rgb(217 119 6 / 0.72), 0 0 0 2px rgb(24 24 27 / 0.06);
+    }
+
+    .sentence-active .unit-phrase {
+      background-color: rgb(186 230 253 / var(--hl-active-alpha, 0.58));
+      box-shadow: inset 0 0 0 1px rgb(2 132 199 / 0.66), 0 0 0 2px rgb(24 24 27 / 0.06);
+    }
+
+    .sentence-active .unit-pattern {
+      background-color: rgb(245 208 254 / var(--hl-active-alpha, 0.58));
+      box-shadow: inset 0 0 0 1px rgb(192 38 211 / 0.62), 0 0 0 2px rgb(24 24 27 / 0.06);
+    }
+
+    .sentence-active .unit-idiom {
+      background-color: rgb(167 243 208 / var(--hl-active-alpha, 0.58));
+      box-shadow: inset 0 0 0 1px rgb(5 150 105 / 0.60), 0 0 0 2px rgb(24 24 27 / 0.06);
+    }
+
+    .unit:hover {
+      box-shadow: 0 0 0 2px rgb(24 24 27 / 0.10);
+    }
+
+    .units-off .unit:hover {
+      box-shadow: none !important;
+    }
+
+    .bilingual-off .translation {
+      display: none !important;
+    }
+  </style>
+
+  <script>
+    const hoverTooltip = document.getElementById("hoverTooltip");
+    const tooltipBadge = document.getElementById("tooltipBadge");
+    const tooltipLabel = document.getElementById("tooltipLabel");
+    const tooltipHint = document.getElementById("tooltipHint");
+
+    const selectionSearch = document.getElementById("selectionSearch");
+
+    const explainDrawer = document.getElementById("explainDrawer");
+    const drawerClose = document.getElementById("drawerClose");
+    const drawerType = document.getElementById("drawerType");
+    const drawerTitle = document.getElementById("drawerTitle");
+    const drawerContext = document.getElementById("drawerContext");
+    const drawerSubtitle = document.getElementById("drawerSubtitle");
+
+    const toggleHighlights = document.getElementById("toggleHighlights");
+    const toggleHighlightsDot = document.getElementById("toggleHighlightsDot");
+    const toggleBilingual = document.getElementById("toggleBilingual");
+
+    const densityButtons = Array.from(document.querySelectorAll(".densityBtn"));
+
+    const typeStyles = {
+      "单词": {
+        badge: "bg-amber-100 text-amber-900 ring-1 ring-amber-200",
+      },
+      "词组/搭配": {
+        badge: "bg-sky-100 text-sky-900 ring-1 ring-sky-200",
+      },
+      "句式": {
+        badge: "bg-fuchsia-100 text-fuchsia-900 ring-1 ring-fuchsia-200",
+      },
+      "俗语": {
+        badge: "bg-emerald-100 text-emerald-900 ring-1 ring-emerald-200",
+      },
+    };
+
+    let hoverRaf = 0;
+    let lastHoverUnit = null;
+    let activeSid = null;
+    let activeSentenceEls = [];
+    let highlightsEnabled = true;
+    let bilingualEnabled = true;
+    let density = "low";
+    let selectionQuery = null;
+
+    const setDensity = (next) => {
+      density = next;
+      const baseAlpha = next === "low" ? "0.26" : next === "mid" ? "0.32" : "0.40";
+      const activeAlpha = next === "low" ? "0.58" : next === "mid" ? "0.68" : "0.78";
+      document.body.style.setProperty("--hl-base-alpha", baseAlpha);
+      document.body.style.setProperty("--hl-active-alpha", activeAlpha);
+      densityButtons.forEach((btn) => {
+        const isActive = btn.dataset.density === next;
+        btn.className =
+          "densityBtn rounded-lg px-2 py-1 " +
+          (isActive
+            ? "bg-white shadow-sm ring-1 ring-zinc-200"
+            : "text-zinc-600 hover:bg-white/60");
+      });
+    };
+
+    setDensity("low");
+
+    const setTooltipForUnit = (unitEl) => {
+      const unitType = unitEl.dataset.unitType || "—";
+      const unitLabel = unitEl.dataset.unitLabel || unitEl.textContent.trim();
+      tooltipLabel.textContent = unitLabel;
+      tooltipHint.textContent = "Hover 识别 · 点击打开解释";
+      tooltipBadge.textContent = unitType;
+      tooltipBadge.className = "inline-flex items-center rounded-lg px-2 py-0.5 text-[11px] font-semibold " + (typeStyles[unitType]?.badge || "bg-zinc-100 text-zinc-800 ring-1 ring-zinc-200");
+    };
+
+    const showTooltipAt = (x, y) => {
+      hoverTooltip.style.transform = "translate3d(" + Math.min(x + 12, window.innerWidth - 380) + "px," + Math.min(y + 14, window.innerHeight - 90) + "px,0)";
+      hoverTooltip.classList.remove("hidden");
+      hoverTooltip.setAttribute("aria-hidden", "false");
+    };
+
+    const hideTooltip = () => {
+      hoverTooltip.classList.add("hidden");
+      hoverTooltip.setAttribute("aria-hidden", "true");
+    };
+
+    const hideSelectionSearch = () => {
+      selectionSearch.classList.add("hidden");
+      selectionSearch.style.transform = "translate3d(0,0,0)";
+      selectionQuery = null;
+    };
+
+    const clearActive = () => {
+      document.querySelectorAll(".unit-active").forEach((el) => el.classList.remove("unit-active"));
+    };
+
+    const activateUnit = (unitEl) => {
+      clearActive();
+      unitEl.classList.add("unit-active");
+    };
+
+    const sentenceIndex = new Map();
+    document.querySelectorAll(".sentence[data-sid]").forEach((el) => {
+      const sid = el.dataset.sid;
+      if (!sid) return;
+      const list = sentenceIndex.get(sid) || [];
+      list.push(el);
+      sentenceIndex.set(sid, list);
+    });
+
+    const setActiveSid = (sid) => {
+      if (activeSid === sid) return;
+      activeSentenceEls.forEach((el) => el.classList.remove("sentence-active"));
+      activeSentenceEls = [];
+      activeSid = sid;
+      if (!activeSid) return;
+      const next = sentenceIndex.get(activeSid) || [];
+      activeSentenceEls = next;
+      activeSentenceEls.forEach((el) => el.classList.add("sentence-active"));
+    };
+
+    const openDrawerForUnit = (unitEl) => {
+      const unitType = unitEl.dataset.unitType || "—";
+      const unitLabel = unitEl.dataset.unitLabel || unitEl.textContent.trim();
+      drawerType.textContent = unitType;
+      drawerTitle.textContent = unitLabel;
+      drawerSubtitle.textContent = "点击语言单位后显示语境化解释（此处为占位）";
+
+      const p = unitEl.closest("p");
+      const context = p ? p.textContent.trim().replace(/\s+/g, " ") : unitEl.textContent.trim();
+      drawerContext.textContent = context;
+
+      explainDrawer.classList.remove("hidden");
+      document.body.classList.add("overflow-hidden");
+    };
+
+    const openDrawerForSelection = (query) => {
+      drawerType.textContent = "精确查询";
+      drawerTitle.textContent = query.text;
+      drawerSubtitle.textContent = "选中文本 → 点击放大镜 → 触发精确查询（此处为占位）";
+      drawerContext.textContent = query.context;
+      explainDrawer.classList.remove("hidden");
+      document.body.classList.add("overflow-hidden");
+    };
+
+    const closeDrawer = () => {
+      explainDrawer.classList.add("hidden");
+      document.body.classList.remove("overflow-hidden");
+    };
+
+    drawerClose.addEventListener("click", closeDrawer);
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        hideSelectionSearch();
+        setActiveSid(null);
+        hideTooltip();
+        closeDrawer();
+        clearActive();
+      }
+    });
+
+    toggleHighlights.addEventListener("click", () => {
+      highlightsEnabled = !highlightsEnabled;
+      document.body.classList.toggle("units-off", !highlightsEnabled);
+      toggleHighlightsDot.className = "h-2 w-2 rounded-full " + (highlightsEnabled ? "bg-emerald-500" : "bg-zinc-300");
+      toggleHighlights.childNodes[toggleHighlights.childNodes.length - 1].textContent = highlightsEnabled ? " 高亮：开" : " 高亮：关";
+      if (!highlightsEnabled) {
+        setActiveSid(null);
+        hideSelectionSearch();
+        hideTooltip();
+        clearActive();
+      }
+    });
+
+    toggleBilingual.addEventListener("click", () => {
+      bilingualEnabled = !bilingualEnabled;
+      document.body.classList.toggle("bilingual-off", !bilingualEnabled);
+      toggleBilingual.textContent = bilingualEnabled ? "双语：开" : "双语：关";
+    });
+
+    densityButtons.forEach((btn) => {
+      btn.addEventListener("click", () => setDensity(btn.dataset.density));
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (!highlightsEnabled) return;
+      if (hoverRaf) return;
+      hoverRaf = requestAnimationFrame(() => {
+        hoverRaf = 0;
+        const sentence = e.target?.closest?.(".sentence");
+        if (!sentence) {
+          setActiveSid(null);
+          lastHoverUnit = null;
+          hideTooltip();
+          clearActive();
+          return;
+        }
+        setActiveSid(sentence.dataset.sid || null);
+
+        const unit = e.target?.closest?.(".unit");
+        if (!unit) {
+          lastHoverUnit = null;
+          hideTooltip();
+          clearActive();
+          return;
+        }
+        if (unit !== lastHoverUnit) {
+          lastHoverUnit = unit;
+          setTooltipForUnit(unit);
+          activateUnit(unit);
+        }
+        showTooltipAt(e.clientX, e.clientY);
+      });
+    });
+
+    document.addEventListener("click", (e) => {
+      const target = e.target?.closest?.(".unit");
+      if (!target) return;
+      openDrawerForUnit(target);
+    });
+
+    document.addEventListener("mouseleave", () => {
+      setActiveSid(null);
+      hideSelectionSearch();
+      hideTooltip();
+      clearActive();
+    });
+
+    const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+
+    const getSelectionRect = (selection) => {
+      if (!selection || selection.rangeCount === 0) return null;
+      const range = selection.getRangeAt(0);
+      if (range.collapsed) return null;
+      const rect = range.getBoundingClientRect();
+      if (!rect || rect.width === 0 || rect.height === 0) return null;
+      return rect;
+    };
+
+    const nodeInArticle = (node) => {
+      const el = node?.nodeType === 1 ? node : node?.parentElement;
+      if (!el) return false;
+      const inArticle = !!el.closest?.("#viArticle");
+      const inTranslation = !!el.closest?.(".translation");
+      return inArticle && !inTranslation;
+    };
+
+    const showSelectionSearchAt = (rect) => {
+      const x = clamp(rect.right + 10, 12, window.innerWidth - 52);
+      const y = clamp(rect.top - 10, 12, window.innerHeight - 52);
+      selectionSearch.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      selectionSearch.classList.remove("hidden");
+    };
+
+    const updateSelectionSearch = () => {
+      if (!highlightsEnabled) return hideSelectionSearch();
+      if (document.body.classList.contains("overflow-hidden")) return hideSelectionSearch();
+
+      const selection = window.getSelection();
+      const text = selection?.toString()?.trim() || "";
+      if (!text) return hideSelectionSearch();
+
+      const anchorNode = selection?.anchorNode;
+      const focusNode = selection?.focusNode;
+      if (!nodeInArticle(anchorNode) || !nodeInArticle(focusNode)) return hideSelectionSearch();
+
+      const rect = getSelectionRect(selection);
+      if (!rect) return hideSelectionSearch();
+
+      const sentence = (anchorNode?.parentElement?.closest?.(".sentence")) || (focusNode?.parentElement?.closest?.(".sentence"));
+      const paragraph = (anchorNode?.parentElement?.closest?.("[data-paragraph]")) || (focusNode?.parentElement?.closest?.("[data-paragraph]"));
+      const contextSource = sentence || paragraph;
+      const context = contextSource ? contextSource.textContent.trim().replace(/\s+/g, " ") : text;
+
+      selectionQuery = { text: text.slice(0, 120), context };
+      showSelectionSearchAt(rect);
+    };
+
+    selectionSearch.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!selectionQuery) return;
+      openDrawerForSelection(selectionQuery);
+      hideSelectionSearch();
+    });
+
+    document.addEventListener("selectionchange", () => {
+      window.setTimeout(updateSelectionSearch, 0);
+    });
+    document.addEventListener("mouseup", () => window.setTimeout(updateSelectionSearch, 0));
+    document.addEventListener("keyup", () => window.setTimeout(updateSelectionSearch, 0));
+    window.addEventListener("scroll", () => hideSelectionSearch(), { passive: true });
+  </script>
+</body>
+
+</html>
